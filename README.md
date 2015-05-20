@@ -74,6 +74,16 @@ Emails can use embedded images by including tags like this in the html content:
 Look at the tests/tests.py file for examples.
 
 
+#### Tests
+
+This test suite relies on the existence of a SMTP server, real or fake to connect to.  
+By default it will attempt to connect to a 'fake' one that can be run using:
+
+`sudo python -m smtpd -n -c DebuggingServer localhost:25`
+
+Set TEST_CONFIG_NAME to one of the keys in TEST_CONFIGURATIONS to test a specific configuration
+
+
 #### Still to do
 
 * Fix tests to use a fake smtp server by default
