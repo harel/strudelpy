@@ -76,7 +76,7 @@ Look at the tests/tests.py file for examples.
 
 #### Tests
 
-This test suite relies on the existence of a SMTP server, real or fake to connect to.  
+This test suite relies on the existence of a SMTP server, real or fake to connect to.
 By default it will attempt to connect to a 'fake' one that can be run using:
 
 `sudo python -m smtpd -n -c DebuggingServer localhost:25`
