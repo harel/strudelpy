@@ -74,3 +74,7 @@ Emails can use embedded images by including tags like this in the html content:
 Look at the tests/tests.py file for examples.
 
 
+#### Still to do
+
+* Fix tests to use a fake smtp server by default
+* Your issues???
