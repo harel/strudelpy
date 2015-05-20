@@ -7,7 +7,7 @@ setup(
     author = 'Harel Malka',
     author_email = 'harel@harelmalka.com',
     url = 'https://github.com/harel/strudelpy',
-    download_url = 'https://github.com/harel/strudelpy/tarball/0.1',
+    download_url = 'https://github.com/harel/strudelpy/archive/0.1.tar.gz',
     keywords = ['email', 'smtp'], # arbitrary keywords
     classifiers = [],
     license='MIT',
