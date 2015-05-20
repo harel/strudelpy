@@ -1,5 +1,12 @@
-## StrudelPy
+## StrudelPy v0.1
 ### A tastier way to send emails with Python
+
+### Features
+* Attachments, multiple recipients, cc, bcc - the standard stuff
+* Embedded Images
+* Plays well with Unicode
+* Easy OOP approach
+
 
 ### Setup
 
@@ -40,3 +47,30 @@ SMTP(host='some.host.com',
      debug_level=None
 )
 ```
+
+Unless using SMTP objects with `with`, you'll need to `login()` and `close()` the connection.
+
+
+#### Email
+
+You can then send emails using the `Email` object:
+```
+    email = Email(sender='me@example.com,
+              recipients=['him@example.com', 'her@example.com'],
+              subject='The Subject Matters',
+              text='Plain text body',
+              html='HTML body',
+              attachments=['absolute/path/to/file'],
+              embedded=['absolute/path/to/image/'])
+    smtp.send(email)
+```
+
+Emails can use embedded images by including tags like this in the html content:
+
+```
+<img src="cid:filename.jpg">
+```
+
+Look at the tests/tests.py file for examples.
+
+
