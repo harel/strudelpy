@@ -87,4 +87,5 @@ Set TEST_CONFIG_NAME to one of the keys in TEST_CONFIGURATIONS to test a specifi
 #### Still to do
 
 * Fix tests to use a fake smtp server by default
+* Python 3.x support
 * Your issues???
