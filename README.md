@@ -57,6 +57,8 @@ You can then send emails using the `Email` object:
 ```
     email = Email(sender='me@example.com,
               recipients=['him@example.com', 'her@example.com'],
+              cc=['cc@me.com'],
+              bcc=['shh@dontell.com'],
               subject='The Subject Matters',
               text='Plain text body',
               html='HTML body',
