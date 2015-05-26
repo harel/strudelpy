@@ -205,7 +205,7 @@ class TestEmailSend(unittest.TestCase):
         smtp = None
         try:
             # trying some unroutable ip to trigger timeout
-            smtp = SMTP(host="10.255.255.1", port=TEST_CONFIG['SMTP_PORT'],
+            smtp = SMTP(host="localhost", port=TEST_CONFIG['SMTP_PORT']+1,
                          username=TEST_CONFIG['SMTP_USER'], password=TEST_CONFIG['SMTP_PASS'],
                          ssl=TEST_CONFIG['SSL'], tls=TEST_CONFIG['TLS'], timeout=1)
             smtp.login()
@@ -213,7 +213,7 @@ class TestEmailSend(unittest.TestCase):
             timedout = True
             message = e.message
         finally:
-            if smtp:
+            if smtp and smtp.client:
                 smtp.close()
         self.assertTrue(timedout)
         self.assertTrue('timed out' in message)

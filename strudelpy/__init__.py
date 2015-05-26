@@ -59,7 +59,7 @@ class SMTP(object):
         self.tls = tls
         self.timeout = timeout
         self.debug_level = debug_level
-        self.client = self._get_client()
+        self.client = None
 
     def __enter__(self):
         self.login()
@@ -96,6 +96,7 @@ class SMTP(object):
         If login() fails, attempt to perform a fallback method using base64 encoded password and
         raw SMTP commands
         """
+        self.client = self._get_client()
         if self.username and self.password:
             try:
                 self.client.login(self.username.encode('utf-8'), self.password.encode('utf-8'))
