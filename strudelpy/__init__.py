@@ -28,7 +28,7 @@ from email.encoders import encode_base64
 from email.charset import Charset
 
 __author__ = 'Harel Malka'
-
+__version__ = '0.2'
 
 # initialise the mimetypes module
 mimetypes.init()

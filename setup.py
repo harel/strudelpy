@@ -1,7 +1,7 @@
 from distutils.core import setup
 setup(
     name = 'strudelpy',
-    version = '0.1',
+    version = '0.2',
     description = 'Easy as Pie Emails in Python',
     long_description='StrudelPy is an easy to use library to manage sending emails in a OO way.'
                      'The library is comprised of a SMTP object to manage connections to SMTP'
@@ -9,7 +9,7 @@ setup(
     author = 'Harel Malka',
     author_email = 'harel@harelmalka.com',
     url = 'https://github.com/harel/strudelpy',
-    download_url = 'https://github.com/harel/strudelpy/archive/0.1.tar.gz',
+    download_url = 'https://github.com/harel/strudelpy/archive/0.2.tar.gz',
     keywords = ['email', 'smtp'], # arbitrary keywords
     license='MIT',
     packages=['strudelpy', 'strudelpy.tests'],

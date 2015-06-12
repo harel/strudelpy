@@ -6,3 +6,6 @@ StrudelPy Change Log
 * Moved get_client call of SMTP account to the login() method. Makes loging in more lazy.
 * Updates to README.md
 
+0.1
+-----------
+* Initial Release
