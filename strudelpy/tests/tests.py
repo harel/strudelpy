@@ -10,6 +10,7 @@ By default it will attempt to connect to a 'fake' one that can be run using:
 Set TEST_CONFIG_NAME to one of the keys in TEST_CONFIGURATIONS to test a specific configuration
 """
 import os
+import six
 import smtplib
 import threading
 import time
@@ -53,7 +54,7 @@ TEST_CONFIGURATIONS = {
         'SMTP_USER': 'user',
         'SMTP_PASS': 'pass',
         'FROM': 'harel@harelmalka.com',
-        'RECIPIENTS': ['harel@harelmalka.com', 'harel@thisisglow.com'],
+        'RECIPIENTS': ['harel@harelmalka.com'],
         'RECIPIENT_PAIRS': (('Harel Malka', 'someone@example.com'), ('Mario Plumber', 'mario@example.com'))
     }
 }
@@ -101,7 +102,7 @@ class TestEmailSend(unittest.TestCase):
     def test_format_email_address(self):
         email = Email(sender=TEST_CONFIG['FROM'], recipients=TEST_CONFIG['RECIPIENTS'], subject="Subject")
         header = email.format_email_address('from', TEST_CONFIG['RECIPIENTS'])
-        self.assertEqual(str(header), "harel@harelmalka.com , harel@thisisglow.com")
+        self.assertEqual(str(header), "harel@harelmalka.com")
 
 
     def test_simple_text_only_single_recipient(self):
@@ -205,13 +206,13 @@ class TestEmailSend(unittest.TestCase):
         smtp = None
         try:
             # trying some unroutable ip to trigger timeout
-            smtp = SMTP(host="localhost", port=TEST_CONFIG['SMTP_PORT']+1,
-                         username=TEST_CONFIG['SMTP_USER'], password=TEST_CONFIG['SMTP_PASS'],
-                         ssl=TEST_CONFIG['SSL'], tls=TEST_CONFIG['TLS'], timeout=1)
+            smtp = SMTP(host="10.255.255.1", port=TEST_CONFIG['SMTP_PORT'],
+                        username=TEST_CONFIG['SMTP_USER'], password=TEST_CONFIG['SMTP_PASS'],
+                        ssl=TEST_CONFIG['SSL'], tls=TEST_CONFIG['TLS'], timeout=1)
             smtp.login()
         except (socket.timeout, smtplib.SMTPServerDisconnected) as e:
             timedout = True
-            message = e.message
+            message = str(e)
         finally:
             if smtp and smtp.client:
                 smtp.close()
