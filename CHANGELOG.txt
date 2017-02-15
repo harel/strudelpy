@@ -1,5 +1,9 @@
 StrudelPy Change Log
 
+0.3
+-----------
+* Added Python 3.x support
+* Update timeout test to use a non routable ip
 
 0.2
 -----------

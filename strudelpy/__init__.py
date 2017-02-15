@@ -13,25 +13,26 @@ smtp.send(email)
 """
 
 import os
+import six
 import base64
 import uuid
 import smtplib
 import mimetypes
-from email import mime
 from email.mime.text import MIMEText
 from email.mime.image import MIMEImage
 from email.mime.base import MIMEBase
 from email.mime.multipart import MIMEMultipart
 from email.header import Header
-from email.utils import COMMASPACE, formatdate, formataddr, make_msgid
+from email.utils import formatdate, formataddr, make_msgid
 from email.encoders import encode_base64
 from email.charset import Charset
 
 __author__ = 'Harel Malka'
-__version__ = '0.2'
+__version__ = '0.3'
 
 # initialise the mimetypes module
 mimetypes.init()
+
 
 class InvalidConfiguration(Exception):
     pass
@@ -100,10 +101,10 @@ class SMTP(object):
         if self.username and self.password:
             try:
                 self.client.login(self.username.encode('utf-8'), self.password.encode('utf-8'))
-            except (smtplib.SMTPException, smtplib.SMTPAuthenticationError) as e:
+            except (smtplib.SMTPException, smtplib.SMTPAuthenticationError):
                 # if login fails, try again using a manual plain login method
-                self.client.docmd("AUTH LOGIN", base64.b64encode(self.username))
-                self.client.docmd(base64.b64encode(self.password), "")
+                self.client.docmd("AUTH LOGIN", base64.b64encode(six.b(self.username)))
+                self.client.docmd(base64.b64encode(six.b(self.password)), "")
         else:
             self.client.connect()
 
@@ -178,7 +179,7 @@ class Email(object):
             self.message['Cc'] = self.format_email_address(email_type='cc', emails=self.recipients)
 
         self.message['Subject'] = self.get_header('subject', self.subject)
-        self.message['Date'] = formatdate(localtime=True) # TODO check formatdate
+        self.message['Date'] = formatdate(localtime=True)  # TODO check formatdate
         self.message['Message-ID'] = make_msgid(str(uuid.uuid4()))
         self.message['X-Mailer'] = 'Strudelpy Python Client'
         return self.message
@@ -204,9 +205,9 @@ class Email(object):
         emails = emails or self.recipients or []
         header = self.get_header(email_type)
         for i, address in enumerate(emails):
-            if i > 0: # ensure emails are separated by commas
+            if i > 0:  # ensure emails are separated by commas
                 header.append(',', 'us-ascii')
-            if isinstance(address, basestring):
+            if isinstance(address, six.string_types):
                 # address is a string. use as is. Attempt it as ascii first and
                 # if fails, send in the default charset
                 try:
@@ -220,7 +221,7 @@ class Email(object):
                     _name.encode('us-ascii')
                     formatted_address = formataddr(address)
                     header.append(formatted_address, charset='us-ascii')
-                except UnicodeError: # this is not an ascii name - append it separately
+                except UnicodeError:  # this is not an ascii name - append it separately
                     header.append(_name)
                     header.append('<{0}>'.format(_address), charset='us-ascii')
         return header
@@ -253,8 +254,8 @@ class Email(object):
 
     def get_embedded_image(self, path):
         email_part = self.assert_file_mime_type(path)
-        with open(path, 'r') as embedded_file:
-            email_part.set_payload( embedded_file.read() )
+        with open(path, 'rb') as embedded_file:
+            email_part.set_payload(embedded_file.read())
             encode_base64(email_part)
         email_part.add_header('Content-ID', '<{0}>'.format(os.path.basename(path)))
         return email_part
@@ -268,8 +269,8 @@ class Email(object):
         """
         # todo test graceful failure of this
         email_part = self.assert_file_mime_type(path)
-        with open(path, 'r') as attached_file:
-            email_part.set_payload( attached_file.read() )
+        with open(path, 'rb') as attached_file:
+            email_part.set_payload(attached_file.read())
         # no need to base64 plain text
         if email_part.get_content_maintype() != "text":
             encode_base64(email_part)
@@ -290,7 +291,7 @@ class Email(object):
         if asserted_mimetype is None:
             mimetype = MIMEBase(*fallback)
         elif asserted_mimetype.startswith('image'):
-            with open(path, 'r') as embedded_file:
+            with open(path, 'rb') as embedded_file:
                 mimetype = MIMEImage(embedded_file.read(), _subtype=asserted_mimetype.split('/')[1])
         else:
             mimetype = MIMEBase(*asserted_mimetype.split('/'))
@@ -314,7 +315,7 @@ class Email(object):
         Add a custom header to this email
         :param header: header text of Header instance
         """
-        if isinstance(header, basestring):
+        if isinstance(header, six.string_types):
             header = Header(header)
         self.headers.append(header)
 
@@ -338,4 +339,3 @@ class Email(object):
         :param image: string path to the image
         """
         self.embedded.append(image)
-
