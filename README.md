@@ -1,4 +1,4 @@
-## StrudelPy v0.2
+## StrudelPy v0.3
 ### A tastier way to send emails with Python
 
 ### Features
@@ -6,6 +6,7 @@
 * Embedded Images
 * Plays well with Unicode
 * Easy OOP approach
+* Supports Python 2 and 3 (with six)
 
 
 ### Setup
@@ -89,7 +90,6 @@ Set TEST_CONFIG_NAME to one of the keys in TEST_CONFIGURATIONS to test a specifi
 #### Still to do
 
 * Fix tests to use a fake smtp server by default
-* Python 3.x support
 * Your issues???
 
 ##### Motivation and Similar Projects

@@ -18,21 +18,21 @@ import base64
 import uuid
 import smtplib
 import mimetypes
-from email import mime
 from email.mime.text import MIMEText
 from email.mime.image import MIMEImage
 from email.mime.base import MIMEBase
 from email.mime.multipart import MIMEMultipart
 from email.header import Header
-from email.utils import COMMASPACE, formatdate, formataddr, make_msgid
+from email.utils import formatdate, formataddr, make_msgid
 from email.encoders import encode_base64
 from email.charset import Charset
 
 __author__ = 'Harel Malka'
-__version__ = '0.2'
+__version__ = '0.3'
 
 # initialise the mimetypes module
 mimetypes.init()
+
 
 class InvalidConfiguration(Exception):
     pass
@@ -179,7 +179,7 @@ class Email(object):
             self.message['Cc'] = self.format_email_address(email_type='cc', emails=self.recipients)
 
         self.message['Subject'] = self.get_header('subject', self.subject)
-        self.message['Date'] = formatdate(localtime=True) # TODO check formatdate
+        self.message['Date'] = formatdate(localtime=True)  # TODO check formatdate
         self.message['Message-ID'] = make_msgid(str(uuid.uuid4()))
         self.message['X-Mailer'] = 'Strudelpy Python Client'
         return self.message

@@ -10,14 +10,9 @@ By default it will attempt to connect to a 'fake' one that can be run using:
 Set TEST_CONFIG_NAME to one of the keys in TEST_CONFIGURATIONS to test a specific configuration
 """
 import os
-import six
 import smtplib
-import threading
-import time
 import socket
 import unittest
-import smtpd
-import asyncore
 from strudelpy import Email, SMTP
 from strudelpy import InvalidConfiguration
 
