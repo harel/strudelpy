@@ -28,7 +28,7 @@ from email.encoders import encode_base64
 from email.charset import Charset
 
 __author__ = 'Harel Malka'
-__version__ = '0.3'
+__version__ = '0.3.1'
 
 # initialise the mimetypes module
 mimetypes.init()
@@ -100,7 +100,7 @@ class SMTP(object):
         self.client = self._get_client()
         if self.username and self.password:
             try:
-                self.client.login(self.username.encode('utf-8'), self.password.encode('utf-8'))
+                self.client.login(six.u(self.username), six.u(self.password))
             except (smtplib.SMTPException, smtplib.SMTPAuthenticationError):
                 # if login fails, try again using a manual plain login method
                 self.client.docmd("AUTH LOGIN", base64.b64encode(six.b(self.username)))

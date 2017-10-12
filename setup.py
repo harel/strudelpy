@@ -1,7 +1,7 @@
 from distutils.core import setup
 setup(
     name = 'strudelpy',
-    version = '0.3',
+    version = '0.3.1',
     description = 'Easy as Pie Emails in Python',
     long_description='StrudelPy is an easy to use library to manage sending emails in a OO way.'
                      'The library is comprised of a SMTP object to manage connections to SMTP'
