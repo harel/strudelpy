@@ -1,5 +1,9 @@
 StrudelPy Change Log
 
+0.3.2
+-----------
+* Always call connect, even when using smtp auth
+
 0.3
 -----------
 * Added Python 3.x support
