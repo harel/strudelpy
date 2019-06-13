@@ -16,6 +16,7 @@ import os
 import six
 import base64
 import uuid
+import ssl
 import smtplib
 import mimetypes
 from email.mime.text import MIMEText
@@ -28,7 +29,7 @@ from email.encoders import encode_base64
 from email.charset import Charset
 
 __author__ = 'Harel Malka'
-__version__ = '0.3.2'
+__version__ = '0.3.4'
 
 # initialise the mimetypes module
 mimetypes.init()
@@ -50,7 +51,7 @@ class SMTP(object):
         Email(...).send()
 
     """
-    def __init__(self, host, port, username, password, ssl=False, tls=False,
+    def __init__(self, host, port, username=None, password=None, ssl=False, tls=False,
                  timeout=None, debug_level=None):
         self.host = host
         self.port = port
@@ -84,8 +85,9 @@ class SMTP(object):
         else:
             client = smtplib.SMTP(**connection_args)
         if self.tls:
+            context = ssl.SSLContext(ssl.PROTOCOL_TLS)
             client.ehlo()
-            client.starttls()
+            client.starttls(context=context)
             client.ehlo()
         if self.debug_level:
             client.set_debuglevel(self.debug_level)
@@ -103,10 +105,9 @@ class SMTP(object):
                 self.client.login(six.u(self.username), six.u(self.password))
             except (smtplib.SMTPException, smtplib.SMTPAuthenticationError):
                 # if login fails, try again using a manual plain login method
+                self.client.connect(host=self.host, port=self.port)
                 self.client.docmd("AUTH LOGIN", base64.b64encode(six.b(self.username)))
                 self.client.docmd(base64.b64encode(six.b(self.password)), "")
-            finally:
-                self.client.connect()
         else:
             self.client.connect()
 
@@ -255,11 +256,10 @@ class Email(object):
         return self.message.as_string()
 
     def get_embedded_image(self, path):
-        email_part = self.assert_file_mime_type(path)
-        with open(path, 'rb') as embedded_file:
-            email_part.set_payload(embedded_file.read())
-            encode_base64(email_part)
+        email_part = self.get_file_mimetype(path)
+        encode_base64(email_part)
         email_part.add_header('Content-ID', '<{0}>'.format(os.path.basename(path)))
+        email_part.add_header('Content-Disposition', 'attachment; filename="%s"' % os.path.basename(path))
         return email_part
 
     def get_file_attachment(self, path):
@@ -270,16 +270,17 @@ class Email(object):
         :return: MIMEBase object
         """
         # todo test graceful failure of this
-        email_part = self.assert_file_mime_type(path)
-        with open(path, 'rb') as attached_file:
-            email_part.set_payload(attached_file.read())
+        email_part = self.get_file_mimetype(path)
+        if not email_part.get_payload():
+            with open(path, 'rb') as attached_file:
+                email_part.set_payload(attached_file.read())
         # no need to base64 plain text
         if email_part.get_content_maintype() != "text":
             encode_base64(email_part)
         email_part.add_header('Content-Disposition', 'attachment; filename="%s"' % os.path.basename(path))
         return email_part
 
-    def assert_file_mime_type(self, path, fallback=None):
+    def get_file_mimetype(self, path, fallback=None):
         """
         Try to assert the mime type of this file.
         If the mime type cannot be guessed, the fallback is used (default to text/plain)

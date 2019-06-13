@@ -1,5 +1,13 @@
 StrudelPy Change Log
 
+0.3.4
+-----------
+* Fix embedded image double encoding and add content-disposition header
+
+0.3.3
+-----------
+* Different strategy dealing with connect
+
 0.3.2
 -----------
 * Always call connect, even when using smtp auth

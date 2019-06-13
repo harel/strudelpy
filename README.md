@@ -1,4 +1,4 @@
-## StrudelPy v0.3.2
+## StrudelPy v0.3.3
 ### A tastier way to send emails with Python
 
 ### Features
@@ -93,6 +93,6 @@ Set TEST_CONFIG_NAME to one of the keys in TEST_CONFIGURATIONS to test a specifi
 * Your issues???
 
 ##### Motivation and Similar Projects
-StrudelPy was created because I needed just that kind of functionality, in that exact way. I had an itch and my searches for a scratcher did not produce anything suitable. I took some inspiration from an older similar project of mine from way back in 2007, and [Pyzmail](http://www.magiksys.net/pyzmail/) which was nice but not as simple as I'd like to have had it. However after releasing I've found out about  [mailthon](https://github.com/eugene-eeo/mailthon) which shares the same motives and motivation behind StrudelPy. I might have not done this had I known about Mialthon.   
+StrudelPy was created because I needed just that kind of functionality, in that exact way. I had an itch and my searches for a scratcher did not produce anything suitable. I took some inspiration from an older similar project of mine from way back in 2007, and [Pyzmail](http://www.magiksys.net/pyzmail/) which was nice but not as simple as I'd like to have had it. However after releasing I've found out about  [mailthon](https://github.com/eugene-eeo/mailthon) which shares the same motives and motivation behind StrudelPy. I might have not done this had I known about Mialthon.
 
 And by the way, StrudelPy is named after the `at` sign: @, which in Israel is called "The Strudel"...
