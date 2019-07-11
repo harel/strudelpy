@@ -29,11 +29,15 @@ from email.encoders import encode_base64
 from email.charset import Charset
 
 __author__ = 'Harel Malka'
-__version__ = '0.3.4'
+__version__ = '0.3.5'
 
 # initialise the mimetypes module
 mimetypes.init()
 
+try:
+    PROTOCOL_TLS = getattr(ssl, os.environ('EMAIL_TLS_VERSION', 'PROTOCOL_TLSv1_2'))
+except AttributeError:
+    PROTOCOL_TLS = getattr(ssl, 'PROTOCOL_TLS')
 
 class InvalidConfiguration(Exception):
     pass
@@ -85,7 +89,7 @@ class SMTP(object):
         else:
             client = smtplib.SMTP(**connection_args)
         if self.tls:
-            context = ssl.SSLContext(ssl.PROTOCOL_TLS)
+            context = ssl.SSLContext(PROTOCOL_TLS)
             client.ehlo()
             client.starttls(context=context)
             client.ehlo()

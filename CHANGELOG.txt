@@ -1,5 +1,9 @@
 StrudelPy Change Log
 
+0.3.5
+-----------
+Configurable TLS version
+
 0.3.4
 -----------
 * Fix embedded image double encoding and add content-disposition header

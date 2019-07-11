@@ -1,4 +1,4 @@
-## StrudelPy v0.3.3
+## StrudelPy v0.3.5
 ### A tastier way to send emails with Python
 
 ### Features
@@ -76,6 +76,10 @@ Emails can use embedded images by including tags like this in the html content:
 
 Look at the tests/tests.py file for examples.
 
+
+#### TLS Version
+(v0.3.5): to configure the TLS protocol version, set an env variable `EMAIL_TLS_VERSION`
+with either `PROTOCOL_TLSv1`, `PROTOCOL_TLSv1_1` or `PROTOCOL_TLSv1_2`. The default is `PROTOCOL_TLSv1_2`
 
 #### Tests
 
