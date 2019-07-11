@@ -29,13 +29,13 @@ from email.encoders import encode_base64
 from email.charset import Charset
 
 __author__ = 'Harel Malka'
-__version__ = '0.3.5'
+__version__ = '0.3.6'
 
 # initialise the mimetypes module
 mimetypes.init()
 
 try:
-    PROTOCOL_TLS = getattr(ssl, os.environ('EMAIL_TLS_VERSION', 'PROTOCOL_TLSv1_2'))
+    PROTOCOL_TLS = getattr(ssl, os.environ.get('EMAIL_TLS_VERSION', 'PROTOCOL_TLSv1_2'))
 except AttributeError:
     PROTOCOL_TLS = getattr(ssl, 'PROTOCOL_TLS')
 

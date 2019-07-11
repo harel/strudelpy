@@ -1,6 +1,6 @@
 StrudelPy Change Log
 
-0.3.5
+0.3.6
 -----------
 Configurable TLS version
 
