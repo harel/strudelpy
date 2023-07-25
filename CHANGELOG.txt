@@ -1,4 +1,7 @@
 StrudelPy Change Log
+0.3.7
+-----------
+Bug fix - sent str instead of bytes 
 
 0.3.6
 -----------
