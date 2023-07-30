@@ -1,4 +1,4 @@
-## StrudelPy v0.3.7
+## StrudelPy v0.3.8
 ### A tastier way to send emails with Python
 
 ### Features
@@ -22,11 +22,15 @@ from strudelpy import SMTP, Email
 
 smtpclient = SMTP('smtp.example.com', 456, 'myuser', 'muchsecret', ssl=True)
 with smtpclient as smtp:
-    smtp.send(Email(sender='me@example.com,
-                     recipients=['him@example.com', 'her@example.com'],
-                     subject='The Subject Matters',
-                     text='Plain text body',
-                     html='HTML body'))
+    smtp.send(
+        Email(
+            sender='me@example.com,
+            recipients=['him@example.com', 'her@example.com'],
+            subject='The Subject Matters',
+            text='Plain text body',
+            html='HTML body'
+        )
+    )
 ```
 
 ### The 'Can Read' Version
@@ -77,9 +81,12 @@ Emails can use embedded images by including tags like this in the html content:
 Look at the tests/tests.py file for examples.
 
 
-#### TLS Version
-(v0.3.5): to configure the TLS protocol version, set an env variable `EMAIL_TLS_VERSION`
-with either `PROTOCOL_TLSv1`, `PROTOCOL_TLSv1_1` or `PROTOCOL_TLSv1_2`. The default is `PROTOCOL_TLSv1_2`
+#### TLS
+(v0.3.8): It's possible to pass a specific TLS version (ssl.PROTOCOL_TLS*) to the SMTP 
+init, as well as function to work on the context if required (like setting min/max TLS versions, cert location etc.). By default the default context is generated. 
+
+`tls_version`: e.g. ssl.PROTOCOL_TLSv1_2
+`tls_context_handler`: Any function that receives SSLContext instance as first argument. 
 
 #### Tests
 

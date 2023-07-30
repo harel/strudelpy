@@ -29,15 +29,16 @@ from email.encoders import encode_base64
 from email.charset import Charset
 
 __author__ = 'Harel Malka'
-__version__ = '0.3.7'
+__version__ = '0.3.8'
 
 # initialise the mimetypes module
 mimetypes.init()
 
 try:
-    PROTOCOL_TLS = getattr(ssl, os.environ.get('EMAIL_TLS_VERSION', 'PROTOCOL_TLSv1_2'))
+    PROTOCOL_TLS = getattr(ssl, os.environ.get('EMAIL_TLS_VERSION', 'PROTOCOL_TLS'))
 except AttributeError:
     PROTOCOL_TLS = getattr(ssl, 'PROTOCOL_TLS')
+
 
 class InvalidConfiguration(Exception):
     pass
@@ -55,14 +56,18 @@ class SMTP(object):
         Email(...).send()
 
     """
-    def __init__(self, host, port, username=None, password=None, ssl=False, tls=False,
-                 timeout=None, debug_level=None):
+    def __init__(
+        self, host, port, username=None, password=None, ssl=False, tls=False,
+        timeout=None, debug_level=None, tls_version=None, tls_context_handler=None
+    ):
         self.host = host
         self.port = port
         self.username = username
         self.password = password
         self.ssl = ssl
         self.tls = tls
+        self.tls_version = tls_version
+        self.tls_context_handler = tls_context_handler
         self.timeout = timeout
         self.debug_level = debug_level
         self.client = None
@@ -89,10 +94,14 @@ class SMTP(object):
         else:
             client = smtplib.SMTP(**connection_args)
         if self.tls:
-            context = ssl.SSLContext(PROTOCOL_TLS)
-            client.ehlo()
+            if self.tls_version:
+                context = ssl.SSLContext(self.tls_version)
+                if self.tls_context_handler:
+                    self.tls_context_handler(context)
+            else:
+                context = ssl.create_default_context()
             client.starttls(context=context)
-            client.ehlo()
+            client.ehlo_or_helo_if_needed()
         if self.debug_level:
             client.set_debuglevel(self.debug_level)
         return client

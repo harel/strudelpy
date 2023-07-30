@@ -1,4 +1,9 @@
 StrudelPy Change Log
+0.3.8
+-----------
+Better default handling of TLS. 
+TLS version can be set on input along side a context handler to configure the SSLContext.
+
 0.3.7
 -----------
 Bug fix - sent str instead of bytes 
