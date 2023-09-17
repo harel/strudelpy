@@ -29,7 +29,7 @@ from email.encoders import encode_base64
 from email.charset import Charset
 
 __author__ = 'Harel Malka'
-__version__ = '0.3.8'
+__version__ = '0.3.9'
 
 # initialise the mimetypes module
 mimetypes.init()
@@ -156,6 +156,32 @@ class Email(object):
         self.headers = headers
         self.compiled = False
 
+    def compile_message(self):
+        """
+        Compile this message with all its parts
+        :return: the compiled Message object
+        """
+        message = self.get_root_message()
+        if self.attachments:
+            # add the attachments as parts of the Multi part message
+            for attachment in self.attachments:
+                message.attach(self.get_file_attachment(attachment))
+        if self.embedded:
+            for embedded in self.embedded:
+                message.attach(self.get_embedded_image(embedded))
+        self.message = message
+        self.compiled = True
+        return self.message
+
+    def get_payload(self):
+        """
+        Return the final payload of this email. Its compiled if not previously done so.
+        :return: payload as string
+        """
+        if not self.compiled:
+            self.compile_message()
+        return self.message.as_string()
+
     def is_valid_message(self):
         """
         Validate all the required properties of the email are present and raise an
@@ -174,12 +200,19 @@ class Email(object):
         Multi Part email. All the initial fields are set on the message.
         :return: email.Message object
         """
+
         if (self.text and self.html) or self.attachments or self.embedded:
-            self.message = MIMEMultipart('alternative', None)
+            self.message = MIMEMultipart('mixed')
+            message_alt = MIMEMultipart('alternative', None)
+            message_rel = MIMEMultipart('related')
             if self.text:
-                self.message.attach(self.get_email_part(self.text, 'plain'))
+                message_alt.attach(self.get_email_part(self.text, 'plain'))
+            elif self.html:
+                message_alt.attach(self.get_email_part(self.html, 'html'))
             if self.html:
-                self.message.attach(self.get_email_part(self.html, 'html'))
+                message_rel.attach(self.get_email_part(self.html, 'html'))
+            message_alt.attach(message_rel)
+            self.message.attach(message_alt)
         elif self.text or self.html:
             if self.text:
                 self.message = MIMEText(self.text.encode(self.charset), 'plain', self.charset)
@@ -242,37 +275,12 @@ class Email(object):
                     header.append('<{0}>'.format(_address), charset='us-ascii')
         return header
 
-    def compile_message(self):
-        """
-        Compile this message with all its parts
-        :return: the compiled Message object
-        """
-        message = self.get_root_message()
-        if self.attachments:
-            # add the attachments as parts of the Multi part message
-            for attachment in self.attachments:
-                message.attach(self.get_file_attachment(attachment))
-        if self.embedded:
-            for embedded in self.embedded:
-                message.attach(self.get_embedded_image(embedded))
-        self.message = message
-        self.compiled = True
-        return self.message
-
-    def get_payload(self):
-        """
-        Return the final payload of this email. Its compiled if not previously done so.
-        :return: payload as string
-        """
-        if not self.compiled:
-            self.compile_message()
-        return self.message.as_string()
-
     def get_embedded_image(self, path):
         email_part = self.get_file_mimetype(path)
         encode_base64(email_part)
-        email_part.add_header('Content-ID', '<{0}>'.format(os.path.basename(path)))
-        email_part.add_header('Content-Disposition', 'attachment; filename="%s"' % os.path.basename(path))
+        path_basename = os.path.basename(path)
+        email_part.add_header('Content-ID', '<{0}>'.format(path_basename))
+        email_part.add_header('Content-Disposition', 'attachment; filename="%s"' % path_basename)
         return email_part
 
     def get_file_attachment(self, path):
@@ -298,7 +306,7 @@ class Email(object):
         Try to assert the mime type of this file.
         If the mime type cannot be guessed, the fallback is used (default to text/plain)
         :param path: The absolute path to the file
-        :param fallback: Fallback mime type
+        :param fallback: Fallback mime type as a 2 item array, e.g. ["application", "octet-stream"]
         :return: MIMEBase object with the mime type
         """
         # todo look into guess_type

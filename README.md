@@ -1,4 +1,4 @@
-## StrudelPy v0.3.8
+## StrudelPy v0.3.9
 ### A tastier way to send emails with Python
 
 ### Features
@@ -79,6 +79,27 @@ Emails can use embedded images by including tags like this in the html content:
 ```
 
 Look at the tests/tests.py file for examples.
+
+
+#### Email & Gmail etc.
+
+The Email class can be used to construct emails to be delivered via the Gmail (or other)
+api:
+
+```
+email = Email(
+    sender="me@example.com",
+    recipients=['them@example.com'],
+    subject='The Subject Matters',
+    html='Dear so and so',  
+    attachments=["/path/to/file.png"]
+)
+_message = {'raw': base64.urlsafe_b64encode(
+    bytes(email.get_payload(), 'utf-8')
+).decode('utf-8')}
+client = get_gmail_client_thingy()
+client.users().messages().send(userId='me', body=_message).execute()
+```
 
 
 #### TLS
