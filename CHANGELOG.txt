@@ -1,4 +1,8 @@
 StrudelPy Change Log
+0.3.9
+-----------
+Resolve issues when using the Email class to send with attachments via Gmail API.
+
 0.3.8
 -----------
 Better default handling of TLS. 
