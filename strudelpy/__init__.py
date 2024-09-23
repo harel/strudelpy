@@ -29,7 +29,7 @@ from email.encoders import encode_base64
 from email.charset import Charset
 
 __author__ = 'Harel Malka'
-__version__ = '0.3.9'
+__version__ = '0.4.0'
 
 # initialise the mimetypes module
 mimetypes.init()
@@ -108,7 +108,7 @@ class SMTP(object):
 
     def login(self):
         """
-        Connect to the server using hte login (with credentials) or connect (without).
+        Connect to the server using the login (with credentials) or connect (without).
         If login() fails, attempt to perform a fallback method using base64 encoded password and
         raw SMTP commands
         """
@@ -225,7 +225,9 @@ class Email(object):
             self.message['To'] = self.format_email_address(email_type='to', emails=self.recipients)
 
         if self.cc:
-            self.message['Cc'] = self.format_email_address(email_type='cc', emails=self.recipients)
+            self.message['Cc'] = self.format_email_address(email_type='cc', emails=self.cc)
+        if self.bcc:
+            self.message['Bcc'] = self.format_email_address(email_type='bcc', emails=self.bcc)
 
         self.message['Subject'] = self.get_header('subject', self.subject)
         self.message['Date'] = formatdate(localtime=True)  # TODO check formatdate
