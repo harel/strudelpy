@@ -2,7 +2,7 @@ from setuptools import setup
 
 setup(
     name='strudelpy',
-    version='0.3.9',
+    version='0.4.0',
     description='Easy as Pie Emails in Python',
     long_description='StrudelPy is an easy to use library to manage sending emails in a OO way.'
                      'The library is comprised of a SMTP object to manage connections to SMTP'

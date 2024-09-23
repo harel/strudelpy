@@ -1,4 +1,4 @@
-## StrudelPy v0.3.9
+## StrudelPy v0.4.0
 ### A tastier way to send emails with Python
 
 ### Features
