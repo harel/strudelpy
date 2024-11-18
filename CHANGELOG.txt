@@ -1,5 +1,10 @@
 StrudelPy Change Log
 
+0.4.1
+-----------
+Fix Content-ID to use the right cid value (minus file extension)
+Add X-Attachment-Id header for embedded images
+
 0.4.0
 -----------
 Fix CC and BCC not being sent correctly 

@@ -29,7 +29,7 @@ from email.encoders import encode_base64
 from email.charset import Charset
 
 __author__ = 'Harel Malka'
-__version__ = '0.4.0'
+__version__ = '0.4.1'
 
 # initialise the mimetypes module
 mimetypes.init()
@@ -281,7 +281,9 @@ class Email(object):
         email_part = self.get_file_mimetype(path)
         encode_base64(email_part)
         path_basename = os.path.basename(path)
-        email_part.add_header('Content-ID', '<{0}>'.format(path_basename))
+        cid_value = path_basename.split('.')[0]
+        email_part.add_header('Content-ID', '<{0}>'.format(cid_value))
+        email_part.add_header('X-Attachment-Id', '<{0}>'.format(cid_value))
         email_part.add_header('Content-Disposition', 'attachment; filename="%s"' % path_basename)
         return email_part
 
