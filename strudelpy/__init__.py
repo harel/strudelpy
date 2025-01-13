@@ -29,7 +29,7 @@ from email.encoders import encode_base64
 from email.charset import Charset
 
 __author__ = 'Harel Malka'
-__version__ = '0.4.1'
+__version__ = '0.4.2'
 
 # initialise the mimetypes module
 mimetypes.init()
@@ -42,6 +42,10 @@ except AttributeError:
 
 class InvalidConfiguration(Exception):
     pass
+
+
+def as_list(value):
+    return value if isinstance(value, (list, tuple)) else [value]
 
 
 class SMTP(object):
@@ -131,7 +135,8 @@ class SMTP(object):
         """
         Send an Email
         """
-        return self.client.sendmail(email.sender, email.recipients, email.get_payload())
+        recipients = email.all_recipients()
+        return self.client.sendmail(email.sender, recipients, email.get_payload())
 
 
 class Email(object):
@@ -144,7 +149,7 @@ class Email(object):
                  subject=None, text=None, html=None, charset=None,
                  attachments=[], embedded=[], headers=[]):
         self.sender = sender
-        self.recipients = recipients if type(recipients) in (list, tuple) else [recipients]
+        self.recipients = as_list(recipients)
         self.cc = cc
         self.bcc = bcc
         self.subject = subject
@@ -226,8 +231,6 @@ class Email(object):
 
         if self.cc:
             self.message['Cc'] = self.format_email_address(email_type='cc', emails=self.cc)
-        if self.bcc:
-            self.message['Bcc'] = self.format_email_address(email_type='bcc', emails=self.bcc)
 
         self.message['Subject'] = self.get_header('subject', self.subject)
         self.message['Date'] = formatdate(localtime=True)  # TODO check formatdate
@@ -367,3 +370,14 @@ class Email(object):
         :param image: string path to the image
         """
         self.embedded.append(image)
+
+    def all_recipients(self):
+        """
+        Return a list of all recipients, including cc and bcc
+        """
+        recipients = self.recipients.copy()
+        if self.cc:
+            recipients += as_list(self.cc)
+        if self.bcc:
+            recipients += as_list(self.bcc)
+        return recipients

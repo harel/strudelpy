@@ -1,5 +1,9 @@
 StrudelPy Change Log
 
+0.4.2
+-----------
+Better adherance to spec - Remove BCC from headers. 
+
 0.4.1
 -----------
 Fix Content-ID to use the right cid value (minus file extension)
